@@ -4,7 +4,7 @@
 
 [![java](https://img.shields.io/badge/java-17-brightgreen.svg?style=flat&logo=Java)](https://www.oracle.com/java/technologies/downloads/#java17)
 [![gradle](https://img.shields.io/badge/gradle-8.4-brightgreen.svg?style=flat&logo=Gradle)](https://docs.gradle.org/8.4/userguide/installation.html)
-[![spock](https://img.shields.io/badge/spock-2.4--M1--groovy--2.5-brightgreen.svg?style=flat&logo=spock)](https://spockframework.org/spock/docs/2.3/index.html)
+[![spock](https://img.shields.io/badge/spock-2.4--M1--groovy--4.0-brightgreen.svg?style=flat&logo=spock)](https://spockframework.org/spock/docs/2.3/index.html)
 [![release](https://img.shields.io/badge/release-1.0.0-blue.svg)]()
 
 
@@ -24,7 +24,7 @@ dependencies {
 - 创建测试目录
 
 `test`目录 --> 新增`groovy`目录 --> 右键【Mark Directory as Test Resources Root】
-![img.png](https://github.com/kdl1217/spock-mockito-achieve/tree/master/img/img.png)
+![img.png](img/img.png)
 
 > 或者在 `build.gradle` 中添加以下配置：
 ```groovy
@@ -107,7 +107,7 @@ class SimpleSpec extends Specification {
 
 feature的具体写法有很多的block组成，这些block对应的feature方法本身的四个阶段（setup, stimulus, reponse, cleanup) 。每个block对应阶段示意图
 
-![img.png](https://github.com/kdl1217/spock-mockito-achieve/tree/master/img/Feature-method.jpg)
+![img.png](img/Feature-method.jpg)
 
 
 - **Extension**
