@@ -24,7 +24,7 @@ dependencies {
 - 创建测试目录
 
 `test`目录 --> 新增`groovy`目录 --> 右键【Mark Directory as Test Resources Root】
-![img.png](img/img.png)
+![img.png](https://github.com/kdl1217/spock-mockito-achieve/tree/master/img/img.png)
 
 > 或者在 `build.gradle` 中添加以下配置：
 ```groovy
@@ -107,7 +107,7 @@ class SimpleSpec extends Specification {
 
 feature的具体写法有很多的block组成，这些block对应的feature方法本身的四个阶段（setup, stimulus, reponse, cleanup) 。每个block对应阶段示意图
 
-![img.png](img/Feature-method.jpg)
+![img.png](https://github.com/kdl1217/spock-mockito-achieve/tree/master/img/Feature-method.jpg)
 
 
 - **Extension**
