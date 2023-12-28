@@ -1,0 +1,5 @@
+rootProject.name = 'spock-mockito-achieve'
+include 'common'
+include 'server'
+include 'spock-demo'
+

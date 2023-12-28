@@ -1,0 +1,119 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'io.freefair.lombok' version '8.4' apply false
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE' apply false
+    id 'org.springframework.boot' version '3.2.1' apply false
+}
+
+allprojects {
+    group = 'com.kon'
+    version = '1.0.0-SNAPSHOT'
+
+    ext {
+        springBootVersion = "3.2.1"
+        spockVersion = "2.4-M1-groovy-4.0"
+    }
+
+    repositories {
+        maven {
+            url "https://maven.aliyun.com/repository/public"
+        }
+        maven {
+            url "https://repository.incarcloud.com/content/groups/public"
+        }
+    }
+}
+//apply是应用的插件
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'io.freefair.lombok'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    configurations {
+        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+    }
+
+    dependencies {
+        testImplementation "org.junit.jupiter:junit-jupiter-api"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+        testImplementation ("org.springframework.boot:spring-boot-starter-test") {
+            exclude group: "junit", module: "junit"
+            exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+        }
+
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
+            mavenBom "org.spockframework:spock-bom:$spockVersion"
+        }
+
+        dependencies {
+            dependency "cn.hutool:hutool-all:5.6.5"
+
+            dependency "commons-io:commons-io:2.6"
+            dependency "commons-net:commons-net:3.6"
+
+
+            dependency('mysql:mysql-connector-java:8.0.23')
+            dependency('com.alibaba:druid-spring-boot-starter:1.2.20')
+        }
+    }
+
+    compileJava {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+
+    compileTestJava {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+
+    tasks.register('sourceJar', Jar) {
+        from sourceSets.main.allJava
+        archiveClassifier = "sources"
+    }
+
+    test {
+        useJUnitPlatform()
+        ignoreFailures = true
+    }
+
+    tasks.register('removeLombokConfig') {
+        def subProjectPath = project.projectDir
+        if (null != subProjectPath) {
+            def lombokConfigFile = new File(subProjectPath, "lombok.config")
+            if (lombokConfigFile.exists()) {
+                lombokConfigFile.delete()
+            }
+        }
+    }
+
+    tasks.register('removeOutputLog') {
+        def subProjectPath = project.projectDir
+        if (null != subProjectPath) {
+            def logPath = new File(subProjectPath, "output.log")
+            if (logPath.exists()) {
+                logPath.delete()
+            }
+        }
+    }
+
+    jar {
+        exclude("**/application-*.yml")
+    }
+
+    defaultTasks "assemble"
+}

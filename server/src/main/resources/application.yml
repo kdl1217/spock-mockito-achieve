@@ -1,0 +1,95 @@
+server:
+  port: ${SERVER_PORT:1024}
+  #  servlet:
+  #    context-path: /
+  compression:
+    enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+    basedir: ./
+  # 下面是配置undertow作为服务器的参数
+  undertow:
+    threads:
+      # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU核心一个线程
+      io: ${UNDERTOW_IO_THREADS:4}
+      # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载
+      worker: ${UNDERTOW_WORKER_THREADS:32}
+    # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+    # 每块buffer的空间大小,越小的空间被利用越充分
+    buffer-size: 1024
+    # 是否分配的直接内存
+    direct-buffers: true
+    # url 编码
+    url-charset: UTF-8
+
+# Logging settings
+logging:
+  level:
+    root: ERROR
+    org:
+      springframework:
+        security: INFO
+        web: ERROR
+        jdbc: INFO
+        data:
+          jdbc:
+            core: DEBUG
+      hibernate: INFO
+    com:
+      kon: DEBUG
+  file:
+    path: ${LOGGING_FILE_PATH:./}
+    name: ./log/output.log
+  logback:
+    rollingpolicy:
+      max-file-size: ${LOGGING_FILE_MAX_SIZE:100MB}
+      max-history: ${LOGGING_FILE_MAX_HISTORY:50}
+
+# Spring settings
+spring:
+  profiles:
+    active: dev
+  application:
+    name: server
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/testdb?allowMultiQueries=true&characterEncoding=utf8&useUnicode=true&zeroDateTimeBehavior=convertToNull&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&queryTimeout=2400
+    username: ${MYSQL_USER_NAME:root}
+    password: ${MYSQL_PASS_WORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      max-active: 20
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      max-open-prepared-statements: 20
+      validation-query: SELECT 1 FROM DUAL
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 6000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 600000
+      max-evictable-idle-time-millis: 900000
+      keep-alive: true
+      filter:
+        config:
+          enabled: true
+        wall:
+          enabled: true
+          config:
+            multi-statement-allow: true
+            none-base-statement-allow: true
+  jackson:
+    #    property-naming-strategy: SNAKE_CASE
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      write-dates-as-timestamps: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+      enabled: true

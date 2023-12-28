@@ -1,0 +1,70 @@
+plugins {
+    id 'java-library'
+    id 'groovy'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+}
+
+test {
+    // report is always generated after tests run
+    finalizedBy jacocoTestReport
+}
+
+def filter_groovy_file = "build/classes/groovy"
+
+
+jacocoTestReport {
+    // tests are required to run before generating the report
+    dependsOn test
+
+    // 添加需要统计的源代码
+    sourceSets project(":server").sourceSets.main
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            if (!it.toString().contains(filter_groovy_file)) {
+                return fileTree(dir: it, exclude: ['com/kon/App.*'])
+            }
+            return null
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            element = 'PACKAGE'
+            includes = ['']
+
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.75
+            }
+            limit {
+                counter = 'LINE'
+                minimum = 0.75
+            }
+            limit {
+                counter = 'METHOD'
+                minimum = 0.75
+            }
+            limit {
+                counter = 'CLASS'
+                minimum = 0.100
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation project(":server")
+    implementation('org.spockframework:spock-spring')
+    implementation('org.springframework.data:spring-data-commons')
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
