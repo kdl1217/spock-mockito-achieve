@@ -36,5 +36,4 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserRepository.save(sysUser);
     }
 
-
 }

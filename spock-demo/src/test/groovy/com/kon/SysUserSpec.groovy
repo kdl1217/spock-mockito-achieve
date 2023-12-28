@@ -31,27 +31,25 @@ class SysUserSpec extends Specification {
     @InjectMocks
     SysUserServiceImpl sysUserService
 
-    // 初始化
-    def setupSpec() {
-        println ">>>>> 初始化"
-    }
 
     def setup() {
-        println ">>>>> setup"
         MockitoAnnotations.openMocks(this)
     }
 
-    def cleanup() {
-        println ">>>>> cleanup"
-    }
+    def "查询数据"() {
+        given: "模拟数据"
+        when(sysUserRepository.findAll()).thenReturn([SysUserMock.mock()])
 
-    def cleanupSpec() {
-        println ">>>>> cleanupSpec"
+        when:
+        def list = sysUserService.findAll()
+
+        then:
+        list.size() == 1
     }
 
     def "保存数据"() {
-        given:
-        when(sysUserRepository.save(any(SysUser) as SysUser)).thenReturn(SysUserMock.mock())
+        given: "模拟数据"
+        when(sysUserRepository.save(any() as SysUser)).thenReturn(SysUserMock.mock())
 
         when:
         def user = sysUserService.save(SysUserMock.mock())
@@ -59,6 +57,7 @@ class SysUserSpec extends Specification {
         then:
         user != null
     }
+
 
 
 }

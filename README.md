@@ -166,6 +166,25 @@ def "maximum of two numbers"(int a, int b ,int c) {
 
 ---
 
+#### `@Mock`与`@Spy`
+- 相同点
+```text
+对于未指定mock的方法，spy默认会调用真实的方法，有返回值的返回真实的返回值，而mock默认不执行，有返回值的，默认返回null
+```
+- 不同点
+```text
+1. Spy中用when...thenReturn私有方法总是被执行
+2. Spy中用doReturn..when才会不执行真实的方法
+3. mock中用 when...thenReturn 私有方法不会执行
+```
+- 代码统计覆盖率不同
+```text
+1. @spy使用的真实的对象实例，调用的都是真实的方法，所以通过这种方式进行测试，在进行sonar覆盖率统计时统计出来是有覆盖率；
+2. @mock出来的对象可能已经发生了变化，调用的方法都不是真实的，在进行sonar覆盖率统计时统计出来的Calculator类覆盖率为0.00%
+```
+
+---
+
 ### Jacoco
 
 #### 引入依赖包
